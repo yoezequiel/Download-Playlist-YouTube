@@ -33,8 +33,12 @@ def download_playlist(url):
         print("Opción no válida. Saliendo.")
 
 def download_all_videos(playlist, folder_path, choice, quality):
-    for url in playlist.video_urls:
+    total_videos = len(playlist.video_urls)
+    print("Descargando {} videos...".format(total_videos))
+    for i, url in enumerate(playlist.video_urls, start=1):
+        print("Descargando video {}/{}...".format(i, total_videos))
         download_media(url, folder_path, choice, quality)
+    print("Descarga de la playlist completada.")
 
 def download_selected_videos(playlist, folder_path):
     num_videos = input("Ingresa el número de videos que deseas descargar: ")
@@ -55,8 +59,12 @@ def download_selected_videos(playlist, folder_path):
     quality = None
     if choice.lower() == "v":
         quality = input("Ingresa la calidad de descarga de video (1080p, 720p, 480p, 360p): ")
-    for url in selected_videos:
+    total_videos = len(selected_videos)
+    print("Descargando {} videos...".format(total_videos))
+    for i, url in enumerate(selected_videos, start=1):
+        print("Descargando video {}/{}...".format(i, total_videos))
         download_media(url, folder_path, choice, quality)
+    print("Descarga de videos seleccionados completada.")
 
 def download_media(url, folder_path, choice, quality):
     try:
@@ -69,6 +77,7 @@ def download_media(url, folder_path, choice, quality):
             if choice.lower() == "v":
                 stream = youtube.streams.get_by_resolution(quality)
                 if stream:
+                    print("Iniciando descarga del video...")
                     stream.download(output_path=folder_path, filename=cleaned_title + ".mp4")
                     video_path = os.path.join(folder_path, cleaned_title + ".mp4")
                     print("Descarga del video completada. Guardado en: {}".format(video_path))
@@ -77,6 +86,7 @@ def download_media(url, folder_path, choice, quality):
             elif choice.lower() == "a":
                 stream = youtube.streams.get_audio_only()
                 if stream:
+                    print("Iniciando descarga del audio...")
                     stream.download(output_path=folder_path, filename=cleaned_title + ".mp3")
                     audio_path = os.path.join(folder_path, cleaned_title + ".mp3")
                     print("Descarga del audio completada. Guardado en: {}".format(audio_path))
